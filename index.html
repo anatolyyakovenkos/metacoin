@@ -4,86 +4,286 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MetaCoin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Syne:wght@700;800&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { font-family: system-ui, sans-serif; background: #fff; color: #111; }
-  a { color: #0668E1; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{--blue:#0668E1;--dark:#0a0a0a;--white:#fff;--off:#f5f5f7;--gray:#71717a}
+  html{scroll-behavior:smooth}
+  body{font-family:'Outfit',sans-serif;background:var(--white);color:var(--dark);overflow-x:hidden}
 
-  .wrap { max-width: 620px; margin: 0 auto; padding: 60px 24px 80px; }
-
-  h1 { font-size: 2.4rem; font-weight: 800; margin-bottom: 12px; color: #0668E1; }
-  .tag { font-size: 0.85rem; color: #888; margin-bottom: 40px; display: block; }
-
-  h2 { font-size: 1.3rem; font-weight: 700; margin: 48px 0 12px; }
-  p { color: #444; line-height: 1.7; margin-bottom: 16px; font-size: 1rem; }
-  strong { color: #111; }
-
-  .countdown { display: flex; gap: 16px; margin: 24px 0 8px; }
-  .countdown div { text-align: center; }
-  .countdown .n { font-size: 2rem; font-weight: 800; color: #0668E1; line-height: 1; }
-  .countdown .l { font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; }
-
-  .btn {
-    display: inline-block;
-    margin-top: 32px;
-    padding: 14px 32px;
-    background: #0668E1;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
+  /* NOISE TEXTURE OVERLAY */
+  body::after{
+    content:'';position:fixed;inset:0;pointer-events:none;z-index:9999;
+    opacity:0.018;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 
-  hr { border: none; border-top: 1px solid #eee; margin: 48px 0; }
+  /* NAV */
+  nav{
+    position:fixed;top:0;width:100%;z-index:100;
+    padding:20px 32px;
+    display:flex;justify-content:space-between;align-items:center;
+    background:rgba(255,255,255,0.85);backdrop-filter:blur(16px);
+    border-bottom:1px solid rgba(0,0,0,0.05);
+  }
+  .logo{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:var(--blue);text-decoration:none;letter-spacing:-0.02em}
+  .logo span{color:var(--dark)}
+  .nav-r{display:flex;align-items:center;gap:28px}
+  .nav-r a{color:var(--dark);text-decoration:none;font-size:0.88rem;font-weight:500;opacity:0.6;transition:opacity 0.2s}
+  .nav-r a:hover{opacity:1}
+  .buy-btn{
+    padding:10px 24px;background:var(--blue);color:var(--white)!important;
+    border-radius:100px;font-weight:600;opacity:1!important;font-size:0.88rem;
+    transition:transform 0.2s,box-shadow 0.2s;
+  }
+  .buy-btn:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(6,104,225,0.35)}
 
-  footer { color: #aaa; font-size: 0.8rem; margin-top: 60px; }
+  /* HERO */
+  .hero{
+    min-height:100vh;display:flex;flex-direction:column;justify-content:center;
+    padding:140px 32px 80px;max-width:1100px;margin:0 auto;
+    position:relative;
+  }
+  .hero-label{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:0.78rem;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;
+    color:var(--blue);margin-bottom:28px;
+  }
+  .hero-label .live{
+    width:7px;height:7px;background:#ef4444;border-radius:50%;
+    animation:blink 1.4s infinite;
+  }
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+
+  .hero h1{
+    font-family:'Syne',sans-serif;font-size:clamp(3.2rem,7.5vw,5.8rem);
+    font-weight:800;line-height:0.95;letter-spacing:-0.04em;
+    margin-bottom:28px;
+  }
+  .hero h1 .blue{color:var(--blue)}
+
+  .hero-p{
+    font-size:1.15rem;line-height:1.7;color:var(--gray);
+    max-width:520px;margin-bottom:36px;font-weight:400;
+  }
+  .hero-p strong{color:var(--dark);font-weight:600}
+
+  .hero-cta{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+  .btn-primary{
+    padding:14px 36px;background:var(--blue);color:var(--white);
+    border-radius:100px;font-weight:600;font-size:1rem;text-decoration:none;
+    transition:all 0.25s;display:inline-block;
+  }
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(6,104,225,0.3)}
+  .btn-ghost{
+    padding:14px 36px;color:var(--dark);
+    border-radius:100px;font-weight:500;font-size:1rem;text-decoration:none;
+    border:1.5px solid rgba(0,0,0,0.12);transition:all 0.25s;display:inline-block;
+  }
+  .btn-ghost:hover{border-color:var(--blue);color:var(--blue)}
+
+  /* FLOATING $80B */
+  .hero-stat{
+    position:absolute;right:32px;bottom:120px;text-align:right;
+    opacity:0.07;pointer-events:none;user-select:none;
+  }
+  .hero-stat span{
+    font-family:'Syne',sans-serif;font-size:clamp(6rem,14vw,12rem);
+    font-weight:800;line-height:0.85;letter-spacing:-0.05em;color:var(--blue);
+    display:block;
+  }
+
+  /* COUNTDOWN BAR */
+  .countdown-bar{
+    background:var(--dark);color:var(--white);
+    padding:36px 32px;
+    display:flex;align-items:center;justify-content:center;gap:48px;
+    flex-wrap:wrap;
+  }
+  .countdown-bar .label{
+    font-size:0.82rem;text-transform:uppercase;letter-spacing:0.1em;
+    font-weight:600;opacity:0.5;
+  }
+  .timer{display:flex;gap:24px}
+  .timer .unit{text-align:center}
+  .timer .n{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;line-height:1;letter-spacing:-0.02em}
+  .timer .l{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.1em;opacity:0.4;margin-top:4px;font-weight:500}
+  .timer .sep{font-size:2rem;opacity:0.2;line-height:1;font-weight:300}
+
+  /* STORY SECTION */
+  .story{padding:100px 32px;max-width:1100px;margin:0 auto}
+  .story-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:start}
+  .story-left h2{
+    font-family:'Syne',sans-serif;font-size:2.6rem;font-weight:800;
+    line-height:1.05;letter-spacing:-0.03em;margin-bottom:24px;
+  }
+  .story-left h2 .blue{color:var(--blue)}
+  .story-left p{color:var(--gray);line-height:1.75;margin-bottom:16px;font-size:0.98rem}
+  .story-left p strong{color:var(--dark);font-weight:600}
+
+  .story-right{
+    background:var(--off);border-radius:20px;padding:40px;
+    position:relative;overflow:hidden;
+  }
+  .story-right::before{
+    content:'';position:absolute;top:-1px;left:32px;right:32px;height:3px;
+    background:var(--blue);border-radius:0 0 4px 4px;
+  }
+  .fact{margin-bottom:28px}
+  .fact:last-child{margin-bottom:0}
+  .fact .num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--blue);line-height:1}
+  .fact .desc{font-size:0.88rem;color:var(--gray);margin-top:4px;font-weight:400}
+
+  /* WHY STRIP */
+  .why{padding:0 32px 100px;max-width:1100px;margin:0 auto}
+  .why h2{
+    font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;
+    letter-spacing:-0.02em;margin-bottom:36px;
+  }
+  .why-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .why-card{
+    padding:28px 24px;border-radius:14px;
+    border:1.5px solid rgba(0,0,0,0.06);
+    transition:all 0.3s;
+  }
+  .why-card:hover{border-color:var(--blue);transform:translateY(-3px);box-shadow:0 12px 40px rgba(6,104,225,0.08)}
+  .why-card h3{font-size:1rem;font-weight:700;margin-bottom:8px}
+  .why-card p{font-size:0.85rem;color:var(--gray);line-height:1.6}
+
+  /* CTA */
+  .cta{
+    background:var(--blue);color:var(--white);
+    padding:80px 32px;text-align:center;
+  }
+  .cta h2{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;margin-bottom:14px;letter-spacing:-0.03em}
+  .cta p{opacity:0.75;max-width:440px;margin:0 auto 32px;line-height:1.65;font-size:1rem}
+  .cta .btn-w{
+    padding:14px 40px;background:var(--white);color:var(--blue);
+    border-radius:100px;font-weight:700;font-size:1rem;text-decoration:none;
+    display:inline-block;transition:all 0.25s;
+  }
+  .cta .btn-w:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,0.2)}
+
+  /* FOOTER */
+  footer{padding:28px 32px;text-align:center;font-size:0.78rem;color:var(--gray)}
+
+  /* ANIMATIONS */
+  .fade-in{opacity:0;transform:translateY(16px);transition:opacity 0.6s,transform 0.6s}
+  .fade-in.vis{opacity:1;transform:none}
+
+  /* MOBILE */
+  @media(max-width:768px){
+    .nav-r a:not(.buy-btn){display:none}
+    .hero-stat{display:none}
+    .story-grid{grid-template-columns:1fr;gap:40px}
+    .why-row{grid-template-columns:1fr}
+    .countdown-bar{gap:24px;padding:28px 20px}
+    .timer .n{font-size:1.6rem}
+    nav{padding:16px 20px}
+    .hero,.story,.why{padding-left:20px;padding-right:20px}
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
 
-  <h1>MetaCoin</h1>
-  <span class="tag">the world's first cryptocurrency inside the metaverse</span>
-
-  <p>Mark Zuckerberg put over <strong>$80 billion</strong> into building the Metaverse. Now it's going viral for one reason — it's shutting down. The servers close on <strong>April 31st</strong>.</p>
-
-  <p>Before it goes dark, I officially launched the world's first crypto coin inside of the Metaverse. That's MetaCoin.</p>
-
-  <h2>Shutdown Countdown</h2>
-  <div class="countdown">
-    <div><div class="n" id="d">--</div><div class="l">Days</div></div>
-    <div><div class="n" id="h">--</div><div class="l">Hours</div></div>
-    <div><div class="n" id="m">--</div><div class="l">Min</div></div>
-    <div><div class="n" id="s">--</div><div class="l">Sec</div></div>
+<nav>
+  <a href="#" class="logo">Meta<span>Coin</span></a>
+  <div class="nav-r">
+    <a href="#story">Story</a>
+    <a href="#why">Why</a>
+    <a href="#" class="buy-btn">Buy MetaCoin</a>
   </div>
+</nav>
 
-  <hr>
+<section class="hero">
+  <div class="hero-label"><span class="live"></span> Metaverse closing April 31st</div>
+  <h1>The first crypto<br>inside the <span class="blue">Metaverse.</span></h1>
+  <p class="hero-p">Zuckerberg put <strong>$80 billion</strong> into the Metaverse. It's shutting down. I launched the first — and only — cryptocurrency inside of it before it goes dark forever.</p>
+  <div class="hero-cta">
+    <a href="#" class="btn-primary">Buy MetaCoin</a>
+    <a href="#story" class="btn-ghost">The full story</a>
+  </div>
+  <div class="hero-stat"><span>$80B</span></div>
+</section>
 
-  <h2>What happened</h2>
-  <p>Facebook rebranded to Meta. They hired thousands of people, built virtual worlds, and burned through $80 billion trying to make the Metaverse happen. It didn't work. Now they're pulling the plug.</p>
-  <p>The entire internet is talking about it. And in the middle of all of it, MetaCoin exists — the only cryptocurrency ever created inside the Metaverse itself.</p>
-
-  <h2>Why it matters</h2>
-  <p>There's never been a coin launched inside the Metaverse before. When the servers shut down, MetaCoin becomes the only thing that survives. A digital artifact from a world that cost $80 billion to build and will no longer exist.</p>
-
-  <a href="#" class="btn">Buy MetaCoin</a>
-
-  <hr>
-
-  <footer>MetaCoin &copy; 2025</footer>
-
+<div class="countdown-bar">
+  <span class="label">Metaverse shuts down in</span>
+  <div class="timer">
+    <div class="unit"><div class="n" id="d">--</div><div class="l">Days</div></div>
+    <span class="sep">:</span>
+    <div class="unit"><div class="n" id="h">--</div><div class="l">Hrs</div></div>
+    <span class="sep">:</span>
+    <div class="unit"><div class="n" id="m">--</div><div class="l">Min</div></div>
+    <span class="sep">:</span>
+    <div class="unit"><div class="n" id="s">--</div><div class="l">Sec</div></div>
+  </div>
 </div>
 
+<section class="story" id="story">
+  <div class="story-grid">
+    <div class="story-left fade-in">
+      <h2>The Metaverse is <span class="blue">dead.</span></h2>
+      <p>Facebook rebranded to Meta. Zuckerberg hired thousands, built virtual worlds, and burned through <strong>$80 billion</strong> trying to make it the future. It flopped.</p>
+      <p>Now it's the biggest tech story of the year — the Metaverse is officially closing on <strong>April 31st</strong>. Servers off. Worlds deleted. Everything gone.</p>
+      <p>But right before the lights go out, I did something nobody's ever done. I launched a cryptocurrency <strong>inside the Metaverse itself</strong>. That coin is MetaCoin — the first and last of its kind.</p>
+    </div>
+    <div class="story-right fade-in">
+      <div class="fact">
+        <div class="num">$80B+</div>
+        <div class="desc">Total invested by Zuckerberg into the Metaverse</div>
+      </div>
+      <div class="fact">
+        <div class="num">April 31</div>
+        <div class="desc">Official shutdown date — servers go dark</div>
+      </div>
+      <div class="fact">
+        <div class="num">#1</div>
+        <div class="desc">First and only crypto ever created inside the Metaverse</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="why" id="why">
+  <h2>Why MetaCoin matters</h2>
+  <div class="why-row">
+    <div class="why-card fade-in">
+      <h3>First ever</h3>
+      <p>No one has ever launched a coin inside the Metaverse. MetaCoin is a one-of-one — it can never be replicated.</p>
+    </div>
+    <div class="why-card fade-in">
+      <h3>Digital artifact</h3>
+      <p>When the Metaverse shuts down, MetaCoin is the only thing that survives. A relic from an $80 billion world.</p>
+    </div>
+    <div class="why-card fade-in">
+      <h3>The narrative</h3>
+      <p>The whole internet is watching the Metaverse die. MetaCoin is the coin at the center of the story.</p>
+    </div>
+  </div>
+</section>
+
+<section class="cta">
+  <h2>Own a piece of the Metaverse</h2>
+  <p>Before it's gone. The countdown is live. MetaCoin is your last chance.</p>
+  <a href="#" class="btn-w">Buy MetaCoin</a>
+</section>
+
+<footer>MetaCoin &copy; 2025</footer>
+
 <script>
-const t = new Date('2025-04-30T23:59:59').getTime();
-setInterval(() => {
-  const df = Math.max(0, t - Date.now());
-  document.getElementById('d').textContent = Math.floor(df/864e5);
-  document.getElementById('h').textContent = Math.floor(df%864e5/36e5);
-  document.getElementById('m').textContent = Math.floor(df%36e5/6e4);
-  document.getElementById('s').textContent = Math.floor(df%6e4/1e3);
-}, 1000);
+const t=new Date('2025-04-30T23:59:59').getTime();
+function tick(){
+  const df=Math.max(0,t-Date.now());
+  document.getElementById('d').textContent=String(Math.floor(df/864e5)).padStart(2,'0');
+  document.getElementById('h').textContent=String(Math.floor(df%864e5/36e5)).padStart(2,'0');
+  document.getElementById('m').textContent=String(Math.floor(df%36e5/6e4)).padStart(2,'0');
+  document.getElementById('s').textContent=String(Math.floor(df%6e4/1e3)).padStart(2,'0');
+}
+tick();setInterval(tick,1000);
+
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')})},{threshold:0.15});
+document.querySelectorAll('.fade-in').forEach(el=>obs.observe(el));
 </script>
 </body>
 </html>
